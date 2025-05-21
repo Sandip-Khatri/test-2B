@@ -1,5 +1,4 @@
 # test-2B
- What the Form Does
 Lets the user type their name and phone number. Lets the user choose a dinner time. Lets the user select menu items like Starters, Main Course, Desserts, and Drinks.Shows a message with the booking details after clicking Submit
 
  Input Checks (Validation)
