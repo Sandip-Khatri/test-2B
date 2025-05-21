@@ -1,0 +1,171 @@
+﻿<!DOCTYPE html>
+<html>
+  <head>
+    <title>test 2B – My Portfolio</title>
+ <meta charset="UTF-8" />
+ <meta name="description" content="This is a dinner booking form with name, phone, time, and menu selection. It checks inputs and shows a summary after submission." />
+ <meta name="author" content="Sandip Khatri" />
+ <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+ <meta name="keywords" content="HTML, CSS, JavaScript, test 2B" />
+    <style>
+      table {
+        text-align: center;
+        margin-left: 10%;
+        margin-right: 50%;
+        font-family: 'Lucida Sans', 'Lucida Sans Regular',
+                     'Lucida Grande', 'Lucida Sans Unicode',
+                     Geneva, Verdana, sans-serif;
+      }
+      input, button {
+        padding: 12px 20px;
+        margin: 8px 0;
+        display: inline-block;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-sizing: border-box;
+        font-family: 'Lucida Sans', 'Lucida Sans Regular',
+                     'Lucida Grande', 'Lucida Sans Unicode',
+                     Geneva, Verdana, sans-serif;
+        align: center;
+      }
+      #message {
+        color: red;
+        font-weight: bold;
+        margin-left: 10px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div align="center">
+      <h1>Booking your place for your dinner!</h1>
+
+      <label for="name">Name:</label>
+      <input type="text" id="name" size="22" onblur="validateName()">
+
+      <label for="phone">Phone Number</label>
+      <input type="text" id="phone" size="22" onblur="validatePhone()"><br>
+    </div>
+
+    <br>
+    <div align="margin-left">
+      <h2>Select a time</h2>
+      <input type="radio" id="first" name="time" value="05:00" checked>
+      <label for="first">05:00</label><br>
+      <input type="radio" id="second" name="time" value="06:00">
+      <label for="second">06:00</label><br>
+      <input type="radio" id="third" name="time" value="07:00">
+      <label for="third">07:00</label><br>
+      <input type="radio" id="fourth" name="time" value="08:00">
+      <label for="fourth">08:00</label><br>
+      <br>
+
+      <h2>What would you like to have with us?</h2>
+      <input type="checkbox" id="starters" value="Starters">
+      <label for="starters">Starters</label><br>
+      <input type="checkbox" id="Main" value="Main Course">
+      <label for="Main">Main Course</label><br>
+      <input type="checkbox" id="dessert" value="Desserts">
+      <label for="dessert">Desserts</label><br>
+      <input type="checkbox" id="drinks" value="Drinks">
+      <label for="drinks">Drinks</label><br>
+    </div>
+
+    <button id="submit" onclick="submitForm()" disabled>Submit</button>
+    <span id="message">. . .</span>
+
+    <script>
+      // Variables to keep track of whether name and phone inputs are valid
+let validName = false;
+let validPhone = false;
+
+// Function to validate the name input
+function validateName() {
+  const nameField = document.getElementById("name");
+  const name = nameField.value.trim(); // Remove leading/trailing spaces
+
+  // Check if name is empty
+  if (name === "") {
+    nameField.style.backgroundColor = "red";
+    document.getElementById("message").innerText = "Error: Name is empty.";
+    validName = false;
+  }
+  // Check if name contains at least two words (first and last name)
+  else if (!/\w+\s+\w+/.test(name)) {
+    nameField.style.backgroundColor = "red";
+    document.getElementById("message").innerText = "Error: First and last name are required.";
+    validName = false;
+  }
+  // Name is valid
+  else {
+    nameField.style.backgroundColor = "white";
+    document.getElementById("message").innerText = "";
+    validName = true;
+  }
+
+  toggleSubmit(); // Enable or disable the submit button
+}
+
+// Function to validate the phone input
+function validatePhone() {
+  const phoneField = document.getElementById("phone");
+  const phone = phoneField.value.trim(); // Remove leading/trailing spaces
+
+  // Check if phone is empty
+  if (phone === "") {
+    phoneField.style.backgroundColor = "red";
+    document.getElementById("message").innerText = "Error: Phone number is empty.";
+    validPhone = false;
+  }
+  // Check if phone starts with a number and has exactly 6 characters
+  else if (!/^[0-9][a-zA-Z0-9]{5}$/.test(phone)) {
+    phoneField.style.backgroundColor = "red";
+    document.getElementById("message").innerText = "Error: Phone number must start with numbers.";
+    validPhone = false;
+  }
+  // Phone is valid
+  else {
+    phoneField.style.backgroundColor = "white";
+    document.getElementById("message").innerText = "";
+    validPhone = true;
+  }
+
+  toggleSubmit(); // Enable or disable the submit button
+}
+
+// Function to enable the Submit button only if both inputs are valid
+function toggleSubmit() {
+  document.getElementById("submit").disabled = !(validName && validPhone);
+}
+
+// Function to handle form submission and display reservation summary
+function submitForm() {
+  const name = document.getElementById("name").value.trim();
+  const phone = document.getElementById("phone").value.trim();
+  const time = document.querySelector('input[name="time"]:checked').value;
+
+  // Collect selected food items
+  const selectedItems = [];
+  if (document.getElementById("starters").checked) selectedItems.push("Starters");
+  if (document.getElementById("Main").checked) selectedItems.push("Main Course");
+  if (document.getElementById("dessert").checked) selectedItems.push("Desserts");
+  if (document.getElementById("drinks").checked) selectedItems.push("Drinks");
+
+  // Format selected items: "A and B" for 2, or "A, B and C" for 3+
+  let formattedItems = '';
+  if (selectedItems.length === 1) {
+    formattedItems = selectedItems[0];
+  } else if (selectedItems.length === 2) {
+    formattedItems = selectedItems.join(" and ");
+  } else if (selectedItems.length > 2) {
+    formattedItems = selectedItems.slice(0, -1).join(", ") + " and " + selectedItems[selectedItems.length - 1];
+  }
+
+  // Construct and display the final summary message
+  const summary = `Reservation for: ${name} Phone: (${phone}) at ${time}${formattedItems ? ' are: ' + formattedItems : ''}`;
+  document.getElementById("message").innerText = summary;
+  document.getElementById("message").style.color = "black"; // Change message color to black for success
+}
+    </script>
+  </body>
+</html>
